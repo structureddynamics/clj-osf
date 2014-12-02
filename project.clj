@@ -1,6 +1,6 @@
 (defproject clj-osf "0.1.0"
   :description "Clojure API for Open Semantic Framework web services queries"
-  :url "http://opensemanticframework.org"
+  :url "https://github.com/structureddynamics/clj-osf"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
