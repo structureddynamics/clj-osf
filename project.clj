@@ -1,4 +1,4 @@
-(defproject clj-osf "0.1.0"
+(defproject clj-osf "0.1.1"
   :description "Clojure API for Open Semantic Framework web services queries"
   :url "https://github.com/structureddynamics/clj-osf"
   :license {:name "Eclipse Public License"
