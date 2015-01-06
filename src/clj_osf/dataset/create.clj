@@ -96,7 +96,7 @@
     (dataset/title \"Sandbox testing dataset\"))
   ```"  
   [title]
-  {:description title})
+  {:title title})
 
 (defn target-web-services
   "Specifies which web service endpoint can have access to the data
