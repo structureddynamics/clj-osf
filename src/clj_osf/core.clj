@@ -128,6 +128,28 @@
         hash (sha1-hmac-bytes data api-key)]
     (bytes-to-base64-string hash)))
 
+(defn- escape-utf16
+  [[_ _ a b c d]]
+  (format "\\u%02X%02X\\u%02X%02X" a b c d))
+
+(defn- replace-utf32
+  [^String s]
+  (let [n (Integer/parseInt (subs s 2) 16)]
+    (-> (->> (map #(bit-shift-right n %) [24 16 8 0])
+             (map #(bit-and % 0xFF))
+             (byte-array))
+        (String. "UTF-32")
+        (.getBytes "UTF-16")
+        (escape-utf16))))
+
+(defn- fix-json-utf32
+  [json]
+  (clojure.string/replace
+   json
+   #"\\U[0-9A-F]{8}"
+   replace-utf32))
+
+
 (defn ^:no-doc params-list
   "Create a serialized list of values to be used as parameters in a OSF query.
    If [v] is not a vector, then [v] is returned as-is. If it is a vector then
@@ -145,7 +167,7 @@
   "Change the OSF structJSON serialization such that all the we only get one key
    per predicate with a vector of values"
   [response]
-  (let [json (json/read-str (response :body) :key-fn #(keyword %))]
+  (let [json (json/read-str (fix-json-utf32 (response :body)) :key-fn #(keyword %))]
     (if (json :prefixes)
       {:prefixes (json :prefixes)
        :resultset {:subject (->> (for [subject (-> json :resultset :subject)]
@@ -205,10 +227,11 @@
     
     (case (options :->mime)
       "application/json" (internalize-json-response response)
-      "application/iron+json" (json/read-str (response :body)
+      "application/iron+json" (json/read-str (fix-json-utf32 (response :body))
                                              :key-fn #(keyword %))
       "application/edn" (read-string (response :body))
       "application/clojure" (read-string (response :body))
+      "application/sparql-results+json" (fix-json-utf32 (response :body))
       (response :body))))
 
 
