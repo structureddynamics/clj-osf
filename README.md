@@ -8,7 +8,7 @@ Each of the OSF web service endpoint has its own clojure function. A series of f
 
 ### Using Linengen
 
-You can easily install `clj-osf` using Linengen. The only thing you have to do is to add Add `[clj-osf "0.1.1"]` as a dependency to your `project.clj`.
+You can easily install `clj-osf` using Linengen. The only thing you have to do is to add Add `[clj-osf "0.1.2"]` as a dependency to your `project.clj`.
 
 Then make sure that you downloaded this dependency by running the `lein deps` command.
 
